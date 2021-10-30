@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
 
       if (imc < 18.5) {
         setState(() {
-          _resultadoIMC = "Abaixo do peso";
+          _resultadoIMC = "Abaixo do Peso";
         });
       } else if (imc >= 18.6 && imc <= 24.9) {
         setState(() {
@@ -77,6 +77,7 @@ class _HomeState extends State<Home> {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
+                    color: Colors.purple,
                   ),
                 ),
               ),
@@ -114,6 +115,7 @@ class _HomeState extends State<Home> {
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
+                    color: Colors.purple,
                   ),
                 ),
               ),
