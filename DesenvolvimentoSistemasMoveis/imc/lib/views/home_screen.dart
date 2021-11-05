@@ -23,27 +23,27 @@ class _HomeState extends State<Home> {
 
       if (imc < 18.5) {
         setState(() {
-          _resultadoIMC = "Abaixo do Peso";
+          _resultadoIMC = "Abaixo do Peso".toUpperCase();
         });
       } else if (imc >= 18.6 && imc <= 24.9) {
         setState(() {
-          _resultadoIMC = "Peso Ideal";
+          _resultadoIMC = "Peso Ideal".toUpperCase();
         });
       } else if (imc >= 25.0 && imc <= 29.9) {
         setState(() {
-          _resultadoIMC = "Levemente acima do peso";
+          _resultadoIMC = "Levemente acima do peso".toUpperCase();
         });
       } else if (imc >= 30.0 && imc <= 34.9) {
         setState(() {
-          _resultadoIMC = "Obesidade grau 1";
+          _resultadoIMC = "Obesidade grau 1".toUpperCase();
         });
       } else if (imc >= 35.0 && imc <= 39.9) {
         setState(() {
-          _resultadoIMC = "Obesidade grau 2";
+          _resultadoIMC = "Obesidade grau 2".toUpperCase();
         });
       } else if (imc > 40) {
         setState(() {
-          _resultadoIMC = "Obesidade grau 3";
+          _resultadoIMC = "Obesidade grau 3".toUpperCase();
         });
       } else {
         setState(() {
@@ -72,7 +72,7 @@ class _HomeState extends State<Home> {
               Padding(
                 padding: EdgeInsets.only(bottom: 12),
                 child: Text(
-                  "Calcule seu Índice de Massa Corporal",
+                  "Calcule seu Índice de Massa Corporal".toUpperCase(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20,
@@ -112,6 +112,7 @@ class _HomeState extends State<Home> {
                 padding: EdgeInsets.only(top: 80),
                 child: Text(
                   _resultadoIMC,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
