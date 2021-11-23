@@ -1,6 +1,6 @@
-class Task {
+class Ads {
   late String text;
   bool done = false;
 
-  Task(this.text);
+  Ads(this.text);
 }

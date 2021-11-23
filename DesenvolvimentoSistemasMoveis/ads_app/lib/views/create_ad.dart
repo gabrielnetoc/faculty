@@ -61,8 +61,8 @@ class _CreateAdState extends State<CreateAd> {
                       onPressed: () {
                         FocusScope.of(context).unfocus();
                         if (_formKey.currentState!.validate()) {
-                          Task newTask = Task(_textController.text);
-                          Navigator.pop(context, newTask);
+                          Ads newAds = Ads(_textController.text);
+                          Navigator.pop(context, newAds);
                         }
                       },
                     ),
