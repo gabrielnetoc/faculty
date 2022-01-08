@@ -49,6 +49,13 @@ class _HomeState extends State<Home> {
               });
             },
             child: ListTile(
+              leading: item.image != null
+                  ? CircleAvatar(
+                      child: ClipOval(
+                        child: Image.file(item.image!),
+                      ),
+                    )
+                  : const SizedBox(),
               title: Text(
                 _list[position].text,
                 style: TextStyle(
