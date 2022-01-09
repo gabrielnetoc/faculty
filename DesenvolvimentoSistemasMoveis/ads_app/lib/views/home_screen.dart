@@ -1,6 +1,7 @@
 import 'package:ads_app/views/create_ad.dart';
 import 'package:flutter/material.dart';
 import 'package:ads_app/models/todo.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -35,24 +36,52 @@ class _HomeState extends State<Home> {
           Ads item = _list[position];
           return Dismissible(
             key: Key(item.text),
-            background: Container(
-              color: Colors.red,
-              child: const Align(
-                alignment: Alignment(-0.9, 0.0),
-                child: Icon(Icons.delete_forever, color: Colors.white),
-              ),
+            background: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    color: Colors.yellow,
+                    child: const Align(
+                      alignment: Alignment(-0.9, 0.0),
+                      child: Icon(Icons.edit, color: Colors.white),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    color: Colors.red,
+                    child: const Align(
+                      alignment: Alignment(-0.9, 0.0),
+                      child: Icon(Icons.delete_forever, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            direction: DismissDirection.startToEnd,
-            onDismissed: (direction) {
-              setState(() {
-                _list.removeAt(position);
-              });
+            onDismissed: (direction) async {
+              if (direction == DismissDirection.startToEnd) {
+                Ads listAds = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CreateAd(ads: _list[position]),
+                    ));
+                if (listAds != null) {
+                  setState(() {
+                    _list.removeAt(position);
+                    _list.insert(position, listAds);
+                  });
+                }
+              } else if (direction == DismissDirection.endToStart) {
+                setState(() {
+                  _list.removeAt(position);
+                });
+              }
             },
             child: ListTile(
               leading: item.image != null
                   ? CircleAvatar(
                       child: ClipOval(
-                        child: Image.file(item.image!),
+                        child: Image.file(item.image),
                       ),
                     )
                   : const SizedBox(),
@@ -73,20 +102,65 @@ class _HomeState extends State<Home> {
               },
               subtitle: (Text(_list[position].description)),
               isThreeLine: true,
-              trailing: Text(_list[position].price),
+              trailing: Text("R\$: " + _list[position].price),
               dense: true,
               onLongPress: () async {
-                Ads editedAds = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CreateAd(ads: item)));
+                showBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return Container(
+                        height: 180,
+                        child: Column(
+                          children: [
+                            ListTile(
+                              leading: Icon(Icons.email),
+                              title: Text("Email"),
+                              onTap: () async {
+                                Navigator.pop(context);
+                                final Uri params = Uri(
+                                    scheme: "mailto",
+                                    path:
+                                        "gabriel.neto@estudante.ifgoiano.edu.br",
+                                    queryParameters: {
+                                      "\\Urisubject": "Anúncios",
+                                      "body": "Lista de Anúncios"
+                                    });
 
-                if (editedAds != null) {
-                  setState(() {
-                    _list.removeAt(position);
-                    _list.insert(position, editedAds);
-                  });
-                }
+                                final url = params.toString();
+                                if (!await launch(url)) {
+                                  throw 'Não foi possível abrir a url ${url}';
+                                }
+                              },
+                            ),
+                            ListTile(
+                              leading: Icon(Icons.sms),
+                              title: Text("SMS"),
+                              onTap: () async {
+                                Navigator.pop(context);
+                                final Uri params = Uri(
+                                    scheme: "sms",
+                                    path: "+5564992296708",
+                                    queryParameters: {
+                                      "body": "Lista de Anúncios"
+                                    });
+
+                                final url = params.toString();
+                                if (!await launch(url)) {
+                                  throw 'Não foi possível abrir a url ${url}';
+                                }
+                              },
+                            ),
+                            ListTile(
+                              leading: Icon(Icons.cancel),
+                              title: Text("Cancelar"),
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                            )
+                          ],
+                        ),
+                      );
+                    });
               },
             ),
           );

@@ -50,7 +50,7 @@ class _CreateAdState extends State<CreateAd> {
       body: Column(children: [
         GestureDetector(
           child: Container(
-            margin: EdgeInsets.symmetric(vertical: 20.0),
+            margin: EdgeInsets.symmetric(vertical: 15.0),
             width: 120,
             height: 120,
             decoration: BoxDecoration(
@@ -113,7 +113,7 @@ class _CreateAdState extends State<CreateAd> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 child: TextFormField(
                   controller: _priceController,
                   style: TextStyle(fontSize: 18),

@@ -27,4 +27,18 @@ Inicialmente o aplicativo não salvará as informações em Banco de Dados e/ou 
 Todo controle dos anúncios salvos, editados e/ou removidos serão executados em uma lista. 
 Futuramente iremos aprender a trabalhar com Banco de Dados. 
 
+
+/*******************VERSÃO 2 *******************/
+
+Adicione no aplicativo desenvolvido até o momento suporte para persistência dos dados usando o package SQFLite, 
+conforme apresentado em sala de aula.
+Você também deve permitir que o usuário possa vincular uma imagem ao anúncio durante o cadastro, 
+utilizando o package Image_Picker, e compartilhar as informações do anúncio em pelo um aplicativo do celular 
+(SMS, E-mail e/ou Whatsapp), utilizando o package Url_Launcher. 
+
+PS: Podem utilizar o Hive em substituição ao SQFLite, caso prefiram. 
+
+Seja criativo! O design da tela é de sua responsabilidade. 
+Utilize os Widgets apresentados durante a aula para criar uma tela bem elaborada.  
+
  */
