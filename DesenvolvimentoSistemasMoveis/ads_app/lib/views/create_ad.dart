@@ -29,7 +29,7 @@ class _CreateAdState extends State<CreateAd> {
         _textController.text = widget.ads!.text;
         _priceController.text = widget.ads!.price;
         _descController.text = widget.ads!.description;
-        _image = widget.ads!.image;
+        // _image = widget.ads!.image;
       });
     }
   }

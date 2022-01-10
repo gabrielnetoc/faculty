@@ -13,15 +13,15 @@ class Ads {
     this.text = map['text'];
     this.price = map['price'];
     this.description = map['desc'];
-    //this.image = map['imagePath'] != "" ? File(map['imagePath']) : null;
+    this.image = (map['imagePath'] == '' ? File(map['imagePath']) : null)!;
   }
 
-  Map<String, dynamic> toMap() {
+  Map toMap() {
     Map<String, dynamic> map = {
-      "text": this.text,
-      "price": this.price,
-      "desc": this.description,
-      // "imagePath" : this.image != null ? this.image.path : ""
+      'text': this.text,
+      'price': this.price,
+      'desc': this.description,
+      'imagePath': this.image != null ? this.image.path : ""
     };
 
     return map;

@@ -16,6 +16,16 @@ class _HomeState extends State<Home> {
   final FilePersistence _filePersistence = FilePersistence();
 
   @override
+  void initState() {
+    super.initState();
+    _filePersistence.getData().then((listaAds) {
+      if (listaAds != null) {
+        _list = listaAds;
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffD1D1D1),
@@ -77,6 +87,23 @@ class _HomeState extends State<Home> {
                 setState(() {
                   _list.removeAt(position);
                 });
+              }
+            },
+            confirmDismiss: (direction) async {
+              if (direction == DismissDirection.startToEnd) {
+                Ads editedAds = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CreateAd(
+                              ads: item,
+                            )));
+                if (editedAds != null) {
+                  setState(() {
+                    _list.removeAt(position);
+                    _list.insert(position, editedAds);
+                    // FilePersistence.saveData(_list);
+                  });
+                }
               }
             },
             child: ListTile(
