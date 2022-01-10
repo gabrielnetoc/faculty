@@ -1,6 +1,7 @@
+import 'package:ads_app/databases/file_persistence.dart';
 import 'package:ads_app/views/create_ad.dart';
 import 'package:flutter/material.dart';
-import 'package:ads_app/models/todo.dart';
+import 'package:ads_app/models/ads.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Home extends StatefulWidget {
@@ -12,6 +13,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<Ads> _list = List.empty(growable: true);
+  final FilePersistence _filePersistence = FilePersistence();
 
   @override
   Widget build(BuildContext context) {
@@ -176,6 +178,7 @@ class _HomeState extends State<Home> {
                 context, MaterialPageRoute(builder: (context) => CreateAd()));
             setState(() {
               _list.add(newAds);
+              _filePersistence.saveData(_list);
             });
           } catch (error) {
             print("Error: ${error.toString()}");

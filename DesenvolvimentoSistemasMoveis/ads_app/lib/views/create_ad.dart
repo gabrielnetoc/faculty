@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:ads_app/models/todo.dart';
+import 'package:ads_app/models/ads.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
