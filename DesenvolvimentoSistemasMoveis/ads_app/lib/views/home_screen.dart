@@ -19,9 +19,11 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     _filePersistence.getData().then((listaAds) {
-      if (listaAds != null) {
-        _list = listaAds;
-      }
+      setState(() {
+        if (listaAds != null) {
+          _list = listaAds;
+        }
+      });
     });
   }
 
@@ -78,6 +80,7 @@ class _HomeState extends State<Home> {
               } else if (direction == DismissDirection.startToEnd) {
                 setState(() {
                   _list.removeAt(position);
+                  _filePersistence.saveData(_list);
                 });
               }
             },
@@ -92,6 +95,7 @@ class _HomeState extends State<Home> {
                   setState(() {
                     _list.removeAt(position);
                     _list.insert(position, editAds);
+                    _filePersistence.saveData(_list);
                   });
                 }
                 return false;
@@ -103,7 +107,7 @@ class _HomeState extends State<Home> {
               leading: item.image != null
                   ? CircleAvatar(
                       child: ClipOval(
-                        child: Image.file(item.image),
+                        child: Image.file(item.image!),
                       ),
                     )
                   : const SizedBox(),
@@ -153,18 +157,15 @@ class _HomeState extends State<Home> {
                               },
                             ),
                             ListTile(
-                              leading: Icon(Icons.sms),
-                              title: Text("SMS"),
+                              leading: Icon(Icons.send_rounded),
+                              title: const Text("WhatsApp"),
                               onTap: () async {
-                                Navigator.pop(context);
-                                final Uri params = Uri(
-                                    scheme: "sms",
-                                    path: "+5564992296708",
-                                    queryParameters: {
-                                      "body": "Lista de Anúncios"
-                                    });
+                                String tel = "+556499229-6708";
+                                String msg =
+                                    "Olha que anúncio legal, clique  e confira!";
 
-                                final url = params.toString();
+                                final url =
+                                    "https://api.whatsapp.com/send?$tel&text=$msg";
                                 if (!await launch(url)) {
                                   throw 'Não foi possível abrir a url ${url}';
                                 }
@@ -192,14 +193,17 @@ class _HomeState extends State<Home> {
         child: Icon(Icons.add),
         onPressed: () async {
           try {
-            Ads newAds = await Navigator.push(
+            Ads? newAds = await Navigator.push(
                 context, MaterialPageRoute(builder: (context) => CreateAd()));
-            setState(() {
-              _list.add(newAds);
-              _filePersistence.saveData(_list);
-            });
+
+            if (newAds != null) {
+              setState(() {
+                _list.add(newAds);
+                _filePersistence.saveData(_list);
+              });
+            }
           } catch (error) {
-            print("Error: ${error.toString()}");
+            print("Error: ${error}");
           }
         },
       ),

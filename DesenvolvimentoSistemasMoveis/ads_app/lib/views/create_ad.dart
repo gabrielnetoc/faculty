@@ -17,8 +17,10 @@ class _CreateAdState extends State<CreateAd> {
   final TextEditingController _textController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
-  File? _image;
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  File? _image;
 
   @override
   void initState() {
@@ -33,7 +35,7 @@ class _CreateAdState extends State<CreateAd> {
         _textController.text = widget.ads!.text;
         _priceController.text = widget.ads!.price;
         _descController.text = widget.ads!.description;
-        // _image = widget.ads!.image;
+        _image = widget.ads!.image;
       });
     }
   }
@@ -155,7 +157,7 @@ class _CreateAdState extends State<CreateAd> {
                                   _textController.text,
                                   _descController.text,
                                   _priceController.text,
-                                  _image!);
+                                  _image);
                               Navigator.pop(context, newAds);
                             } else {
                               widget.ads!.text = _textController.text;
