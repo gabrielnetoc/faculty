@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:ads_app/models/ads.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class CreateAd extends StatefulWidget {
   Ads? ads;
@@ -77,9 +78,18 @@ class _CreateAdState extends State<CreateAd> {
             final ImagePicker _picker = ImagePicker();
             final XFile? pickerFile =
                 await _picker.pickImage(source: ImageSource.camera);
+
             if (pickerFile != null) {
+              File imagemOr = File(pickerFile.path);
+              final diretorio = await getApplicationDocumentsDirectory();
+              String _localPath = diretorio.path;
+
+              String imageName = UniqueKey().toString();
+              File imagemSave =
+                  await imagemOr.copy('$_localPath/image_$imageName.png');
+
               setState(() {
-                _image = File(pickerFile.path);
+                _image = imagemSave;
               });
             }
           },
