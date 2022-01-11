@@ -47,63 +47,56 @@ class _HomeState extends State<Home> {
         itemBuilder: (context, position) {
           Ads item = _list[position];
           return Dismissible(
-            key: Key(item.text),
-            background: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    color: Colors.yellow,
-                    child: const Align(
-                      alignment: Alignment(-0.9, 0.0),
-                      child: Icon(Icons.edit, color: Colors.white),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    color: Colors.red,
-                    child: const Align(
-                      alignment: Alignment(-0.9, 0.0),
-                      child: Icon(Icons.delete_forever, color: Colors.white),
-                    ),
-                  ),
-                ),
-              ],
+            key: UniqueKey(),
+            background: Container(
+              color: Colors.red,
+              child: const Align(
+                alignment: Alignment(-0.9, 0.0),
+                child: Icon(Icons.delete_forever, color: Colors.white),
+              ),
+            ),
+            secondaryBackground: Container(
+              color: Colors.orange,
+              child: const Align(
+                alignment: Alignment(0.9, 0.0),
+                child: Icon(Icons.edit, color: Colors.white),
+              ),
             ),
             onDismissed: (direction) async {
-              if (direction == DismissDirection.startToEnd) {
-                Ads listAds = await Navigator.push(
+              if (direction == DismissDirection.endToStart) {
+                Ads? editAds = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CreateAd(ads: _list[position]),
+                      builder: (context) => CreateAd(ads: item),
                     ));
-                if (listAds != null) {
+                if (editAds != null) {
                   setState(() {
                     _list.removeAt(position);
-                    _list.insert(position, listAds);
+                    _list.insert(position, editAds);
                   });
                 }
-              } else if (direction == DismissDirection.endToStart) {
+              } else if (direction == DismissDirection.startToEnd) {
                 setState(() {
                   _list.removeAt(position);
                 });
               }
             },
             confirmDismiss: (direction) async {
-              if (direction == DismissDirection.startToEnd) {
-                Ads editedAds = await Navigator.push(
+              if (direction == DismissDirection.endToStart) {
+                Ads? editAds = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => CreateAd(
-                              ads: item,
-                            )));
-                if (editedAds != null) {
+                      builder: (context) => CreateAd(ads: item),
+                    ));
+                if (editAds != null) {
                   setState(() {
                     _list.removeAt(position);
-                    _list.insert(position, editedAds);
-                    // FilePersistence.saveData(_list);
+                    _list.insert(position, editAds);
                   });
                 }
+                return false;
+              } else if (direction == DismissDirection.startToEnd) {
+                return true;
               }
             },
             child: ListTile(
@@ -118,20 +111,18 @@ class _HomeState extends State<Home> {
                 _list[position].text,
                 style: TextStyle(
                     color: _list[position].done ? Colors.grey : Colors.black,
-                    decoration: _list[position].done
-                        ? TextDecoration.lineThrough
-                        : TextDecoration.none,
                     fontWeight: FontWeight.bold,
                     fontSize: 22),
               ),
-              onTap: () {
-                setState(() {
-                  _list[position].done = !_list[position].done;
-                });
-              },
               subtitle: (Text(_list[position].description)),
               isThreeLine: true,
-              trailing: Text("R\$: " + _list[position].price),
+              trailing: Column(
+                children: [
+                  Text("R\$: " +
+                      _list[position].price), //ao usar $ em texto, usar \
+                  //TODO: implementar icon
+                ],
+              ),
               dense: true,
               onLongPress: () async {
                 showBottomSheet(

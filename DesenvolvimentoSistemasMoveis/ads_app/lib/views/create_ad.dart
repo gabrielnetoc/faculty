@@ -17,13 +17,17 @@ class _CreateAdState extends State<CreateAd> {
   final TextEditingController _textController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   File? _image;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
+    if (widget.ads != null) {
+      setState(() {
+        _textController.text = widget.ads!.text;
+      });
+    }
     if (widget.ads != null) {
       setState(() {
         _textController.text = widget.ads!.text;
@@ -134,21 +138,31 @@ class _CreateAdState extends State<CreateAd> {
                       height: 40,
                       child: ElevatedButton(
                         child: Text(
-                          "Cadastrar",
+                          widget.ads == null ? "Cadastrar" : "Editar",
                           style: TextStyle(
                             color: Colors.white,
                           ),
                         ),
-                        style: ElevatedButton.styleFrom(primary: Colors.green),
+                        style: ElevatedButton.styleFrom(
+                            primary: widget.ads == null
+                                ? Colors.green
+                                : Colors.orange),
                         onPressed: () {
                           FocusScope.of(context).unfocus();
                           if (_formKey.currentState!.validate()) {
-                            Ads newAds = Ads(
-                                _textController.text,
-                                _descController.text,
-                                _priceController.text,
-                                _image!);
-                            Navigator.pop(context, newAds);
+                            if (widget.ads == null) {
+                              Ads newAds = Ads(
+                                  _textController.text,
+                                  _descController.text,
+                                  _priceController.text,
+                                  _image!);
+                              Navigator.pop(context, newAds);
+                            } else {
+                              widget.ads!.text = _textController.text;
+                              widget.ads!.price = _priceController.text;
+                              widget.ads!.description = _descController.text;
+                              Navigator.pop(context, widget.ads);
+                            }
                           }
                         },
                       ),
