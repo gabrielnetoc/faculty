@@ -1,31 +1,31 @@
-import 'dart:io';
+// To parse this JSON data, do
+//
+//     final ads = adsFromJson(jsonString);
+
+import 'dart:convert';
+
+Ads adsFromJson(String str) => Ads.fromJson(json.decode(str));
+
+String adsToJson(Ads data) => json.encode(data.toJson());
 
 class Ads {
-  late String text;
-  late String price;
-  late String description;
-  bool done = false;
-  File? image;
+  Ads(
+      {required this.id,
+      required this.titulo,
+      required this.descricao,
+      required this.preco});
 
-  Ads(this.text, this.description, this.price, this.image);
+  int id;
+  String titulo;
+  String descricao;
+  double preco;
 
-  Ads.fromMap(Map map) {
-    this.text = map['text'];
-    this.done = map['done'];
-    this.price = map['price'];
-    this.description = map['desc'];
-    this.image = map['imagePath'] != '' ? File(map['imagePath']) : null;
-  }
+  factory Ads.fromJson(Map<String, dynamic> json) => Ads(
+      id: json["id"],
+      titulo: json["titulo"],
+      descricao: json["descricao"],
+      preco: json["preco"].toDouble());
 
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> map = {
-      'text': this.text,
-      'done': this.done,
-      'price': this.price,
-      'desc': this.description,
-      'imagePath': this.image != null ? this.image!.path : ""
-    };
-
-    return map;
-  }
+  Map<String, dynamic> toJson() =>
+      {"id": id, "titulo": titulo, "descricao": descricao, "preco": preco};
 }

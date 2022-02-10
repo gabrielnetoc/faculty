@@ -1,44 +1,44 @@
-import 'package:ads_app/views/create_ad.dart';
+import 'package:ads_app/views/cadastro_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:ads_app/views/home_screen.dart';
+import 'package:ads_app/views/login_screen.dart';
+import 'package:ads_app/views/create_ad.dart';
 
 void main() {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
-      routes: {"/": (context) => Home(), "/cadastro": (context) => CreateAd()},
+      title: 'Gerenciador de Anúncios',
+      routes: {"/": (context) => LoginScreen()},
     ),
   );
 }
 
-/*
 
-Desenvolva um aplicativo Flutter que terá como objetivo cadastrar e apresentar  anúncios de serviços e/ou 
-produtos (OLX, Mercado Livre, … ). Cada anúncio terá, inicialmente, um título, descrição e preço. 
-Os anúncios cadastrados deverão ser apresentados ao usuário em uma estrutura de lista, 
+
+
+/*v3*/
+
+/*Desenvolva um aplicativo Flutter que terá como objetivo cadastrar e apresentar  
+anúncios de serviços e/ou produtos (OLX, Mercado Livre, … ). 
+O aplicativo desenvolvido deverá realizar todas as operações solicitadas realizando
+ a comunicação com a API REST disponibilizada pelo professor. 
+
+O aplicativo deverá ser capaz de cadastrar um usuário com as 
+seguintes informações obrigatórias: Nome, telefone e senha. 
+Após cadastrar o usuário, o aplicativo deve permitir que o 
+usuário realize login no aplicativo, utilizando o campo telefone e senha. 
+Somente usuários logados  terão acesso às operações dos anúncios 
+(será controlado pela API REST). 
+
+Cada anúncio terá, obrigatoriamente, um título, descrição e preço. 
+Os anúncios serão cadastrados vinculados ao usuário logado e somente 
+o usuário que os cadastrou terão acesso aos anúncios. Os anúncios 
+cadastrados deverão ser apresentados ao usuário em uma estrutura de lista, 
 conforme apresentado em aula. 
 
-Para realizar as operações de cadastro e edição é obrigatório a utilização de uma segunda tela, 
-realizando a transição sempre que essas operações forem requisitadas. 
-A operação de remoção poderá ser realizada diretamente na lista. 
+O aplicativo também deverá permitir ao usuário logado editar e/ou apagar 
+o anúncio por ele cadastrado. 
 
-Inicialmente o aplicativo não salvará as informações em Banco de Dados e/ou arquivos. 
-Todo controle dos anúncios salvos, editados e/ou removidos serão executados em uma lista. 
-Futuramente iremos aprender a trabalhar com Banco de Dados. 
-
-
-/*******************VERSÃO 2 *******************/
-
-Adicione no aplicativo desenvolvido até o momento suporte para persistência dos dados usando o package SQFLite, 
-conforme apresentado em sala de aula.
-Você também deve permitir que o usuário possa vincular uma imagem ao anúncio durante o cadastro, 
-utilizando o package Image_Picker, e compartilhar as informações do anúncio em pelo um aplicativo do celular 
-(SMS, E-mail e/ou Whatsapp), utilizando o package Url_Launcher. 
-
-PS: Podem utilizar o Hive em substituição ao SQFLite, caso prefiram. 
-
-Seja criativo! O design da tela é de sua responsabilidade. 
-Utilize os Widgets apresentados durante a aula para criar uma tela bem elaborada.  
-
- */
+Por fim, permita também que o usuário logado possa realizar logout da aplicação. Ao final dessa operação a tela de login deve ser apresentada ao usuário. 
+*/

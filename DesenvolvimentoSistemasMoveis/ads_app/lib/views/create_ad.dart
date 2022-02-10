@@ -1,207 +1,237 @@
-import 'dart:io';
+import 'dart:ui';
 
 import 'package:ads_app/models/ads.dart';
+import 'package:ads_app/service/ads_service.dart';
+import 'package:ads_app/views/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 
-class CreateAd extends StatefulWidget {
-  Ads? ads;
-
-  CreateAd({this.ads});
+class CreateScreen extends StatefulWidget {
+  const CreateScreen({Key? key, this.ads}) : super(key: key);
+  final Ads? ads;
 
   @override
-  _CreateAdState createState() => _CreateAdState();
+  _CreateScreenState createState() => _CreateScreenState();
 }
 
-class _CreateAdState extends State<CreateAd> {
-  final TextEditingController _textController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _descController = TextEditingController();
+class _CreateScreenState extends State<CreateScreen> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _titleControler = TextEditingController();
+  final TextEditingController _descControler = TextEditingController();
+  final TextEditingController _priceControler = TextEditingController();
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  File? _image;
+  final AdsService _adsService = AdsService();
 
   @override
   void initState() {
     super.initState();
     if (widget.ads != null) {
-      setState(() {
-        _textController.text = widget.ads!.text;
-      });
-    }
-    if (widget.ads != null) {
-      setState(() {
-        _textController.text = widget.ads!.text;
-        _priceController.text = widget.ads!.price;
-        _descController.text = widget.ads!.description;
-        _image = widget.ads!.image;
-      });
+      _titleControler.text = widget.ads!.titulo;
+      _descControler.text = widget.ads!.descricao;
+      _priceControler.text = widget.ads!.preco.toString();
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
-        shadowColor: Colors.transparent,
-        leading: new IconButton(
-          icon: new Icon(Icons.arrow_back_ios_new, color: Colors.black),
-          onPressed: () {
-            Navigator.pushNamed(context, "/");
-          },
-        ),
         backgroundColor: Colors.transparent,
-      ),
-      body: Column(children: [
-        GestureDetector(
-          child: Container(
-            margin: EdgeInsets.symmetric(vertical: 15.0),
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              border: Border.all(width: 1, color: Colors.grey[400]!),
-              shape: BoxShape.circle,
+        title: Center(
+          child: Text(
+            "Criar Anúncio",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
             ),
-            child: _image == null
-                ? const Icon(
-                    Icons.add_a_photo,
-                    size: 30,
-                  )
-                : ClipOval(
-                    child: Image.file(_image!),
-                  ),
           ),
-          onTap: () async {
-            final ImagePicker _picker = ImagePicker();
-            final XFile? pickerFile =
-                await _picker.pickImage(source: ImageSource.camera);
-
-            if (pickerFile != null) {
-              File imagemOr = File(pickerFile.path);
-              final diretorio = await getApplicationDocumentsDirectory();
-              String _localPath = diretorio.path;
-
-              String imageName = UniqueKey().toString();
-              File imagemSave =
-                  await imagemOr.copy('$_localPath/image_$imageName.png');
-
-              setState(() {
-                _image = imagemSave;
-              });
-            }
-          },
         ),
-        Form(
-          key: _formKey,
+      ),
+      body: Center(
+        child: Container(
+          width: 300,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                child: TextFormField(
-                  controller: _textController,
-                  style: TextStyle(fontSize: 18),
-                  decoration: InputDecoration(
-                      labelText: "Título do Anúncio",
-                      labelStyle: TextStyle(fontSize: 18)),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Preenchimento Obrigatório";
-                    }
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
-                child: TextFormField(
-                  controller: _descController,
-                  style: TextStyle(fontSize: 18),
-                  decoration: InputDecoration(
-                      labelText: "Descrição do Anúncio",
-                      labelStyle: TextStyle(fontSize: 18)),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Preenchimento Obrigatório";
-                    }
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child: TextFormField(
-                  controller: _priceController,
-                  style: TextStyle(fontSize: 18),
-                  decoration: InputDecoration(
-                      labelText: "Preço", labelStyle: TextStyle(fontSize: 18)),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Preenchimento Obrigatório";
-                    }
-                  },
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      height: 40,
-                      child: ElevatedButton(
-                        child: Text(
-                          widget.ads == null ? "Cadastrar" : "Editar",
-                          style: TextStyle(
-                            color: Colors.white,
+              Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                      controller: _titleControler,
+                      cursorWidth: 2.5,
+                      decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30)),
+                              borderSide:
+                                  BorderSide(color: Colors.transparent)),
+                          prefixIcon: Icon(Icons.edit),
+                          hintText: "Título",
+                          filled: true,
+                          fillColor: Colors.blue[50],
+                          labelStyle:
+                              TextStyle(fontSize: 18, color: Colors.black12)),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Tem que preencher zé";
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 15),
+                    TextFormField(
+                      controller: _descControler,
+                      cursorWidth: 2.5,
+                      decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30)),
+                              borderSide:
+                                  BorderSide(color: Colors.transparent)),
+                          prefixIcon: Icon(Icons.paste),
+                          hintText: "Descrição",
+                          filled: true,
+                          fillColor: Colors.blue[50],
+                          labelStyle:
+                              TextStyle(fontSize: 18, color: Colors.black12)),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Tem que preencher zé";
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 15),
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      controller: _priceControler,
+                      cursorWidth: 2.5,
+                      decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30)),
+                              borderSide:
+                                  BorderSide(color: Colors.transparent)),
+                          prefixIcon: Icon(Icons.paid),
+                          hintText: "Preço",
+                          filled: true,
+                          fillColor: Colors.blue[50],
+                          labelStyle:
+                              TextStyle(fontSize: 18, color: Colors.black12)),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Tem que preencher zé";
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            width: 180,
+                            height: 50,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: widget.ads == null
+                                    ? Colors.blue
+                                    : Colors.green,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50)),
+                              ),
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  if (widget.ads == null) {
+                                    bool? ad = await _adsService.newAds(Ads(
+                                        id: 0,
+                                        titulo: _titleControler.text,
+                                        descricao: _descControler.text,
+                                        preco: double.parse(
+                                            _priceControler.text)));
+
+                                    if (ad == true) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Home()));
+                                    } else {
+                                      final snackBar = SnackBar(
+                                        content: Text(
+                                            "Erro ao cadastrar, verifique seus dados, zé!"),
+                                        backgroundColor: Colors.red,
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    }
+                                  } else {
+                                    widget.ads!.titulo = _titleControler.text;
+                                    widget.ads!.descricao = _descControler.text;
+                                    widget.ads!.preco =
+                                        double.parse(_priceControler.text);
+
+                                    bool? edited =
+                                        await _adsService.editAds(widget.ads!);
+                                    Navigator.pop(context, true);
+                                  }
+                                }
+                              },
+                              child: Text(
+                                widget.ads == null ? "Cadastrar" : "Editar",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+                            ),
                           ),
                         ),
-                        style: ElevatedButton.styleFrom(
-                            primary: widget.ads == null
-                                ? Colors.green
-                                : Colors.orange),
-                        onPressed: () {
-                          FocusScope.of(context).unfocus();
-                          if (_formKey.currentState!.validate()) {
-                            if (widget.ads == null) {
-                              Ads newAds = Ads(
-                                  _textController.text,
-                                  _descController.text,
-                                  _priceController.text,
-                                  _image);
-                              Navigator.pop(context, newAds);
-                            } else {
-                              widget.ads!.text = _textController.text;
-                              widget.ads!.price = _priceController.text;
-                              widget.ads!.description = _descController.text;
-                              Navigator.pop(context, widget.ads);
-                            }
-                          }
-                        },
-                      ),
+                        Expanded(
+                            child: Container(
+                          height: 50,
+                          width: 200,
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.teal[100],
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50)),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                "Cancelar",
+                                style: TextStyle(color: Colors.black),
+                              )),
+                        ))
+                      ],
                     ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      height: 40,
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: RaisedButton(
-                        color: Colors.redAccent,
-                        child: Text(
-                          "Cancelar",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
         ),
-      ]),
+      ),
     );
   }
 }
